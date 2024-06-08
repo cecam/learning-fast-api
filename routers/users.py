@@ -1,22 +1,26 @@
 from fastapi import APIRouter, HTTPException
 from models import User
 
-router = APIRouter()
+router = APIRouter(
+        prefix="/users",
+        tags=["users"],
+        responses={404: {"message": "Not found"}
+    })
 
 users = [User(id=1, name="Rick"), User(id=2, name="Morty"), User(id=3, name="Summer")]
 
-@router.get("/users")
+@router.get("/")
 async def users():
     return users
 
-@router.post("/users", status_code=201)
+@router.post("/", status_code=201)
 async def create_user(user: User):
     if search_user(user.id):
         raise HTTPException(status_code=409, detail="User already exists")
     users.append(user)
     return user
 
-@router.put("/users/{id}")
+@router.put("/{id}")
 async def update_user(id: int, user: User):
     user = search_user(id)
     if "message" in user:
@@ -24,7 +28,7 @@ async def update_user(id: int, user: User):
     user.name = user.name
     return user
 
-@router.get("/users/{id}")
+@router.get("/{id}")
 async def user(id: int):
     return search_user(id)
     
@@ -35,7 +39,7 @@ def search_user(id: int):
     except: 
         raise HTTPException(status_code=404, detail="User not found")
     
-@router.delete("/users/{id}")
+@router.delete("/{id}")
 async def delete_user(id: int):
     user = search_user(id)
     if "message" in user:
