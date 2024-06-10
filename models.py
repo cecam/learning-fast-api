@@ -19,3 +19,11 @@ class Product(BaseModel):
     name: str
     price: float
     description: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    username: str = None
+    fulln_name: str = None
